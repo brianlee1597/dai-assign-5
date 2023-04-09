@@ -1,18 +1,51 @@
 // main extension logic
 jQuery(function () {
   const lineClicker = new LineClicker();
+  const scrollButtons = new ScrollButtons();
 
-    $(document).on("keydown", function(e) {
-      e.preventDefault();
+  // line clicker function
+  $(document).on("keydown", function (e) {
+    e.preventDefault();
 
-      if(e.key == " ") {
-        e.stopPropagation();
-        lineClicker.execute();
-      }
-    });
+    if (e.key == " ") {
+      e.stopPropagation();
+      lineClicker.execute();
+    }
+  });
+
+  // scroll buttons functions
+  const delta = $(document).height() / 10;
+
+  $(scrollButtons.scrollUpButton).on("click", function (e) {
+    e.preventDefault();
+
+    $('html, body').animate({
+      scrollTop: $(document).scrollTop() - delta,
+    }, 1000);
+  })
+
+  $(scrollButtons.scrollDownButton).on("click", function (e) {
+    e.preventDefault();
+
+    $('html, body').animate({
+      scrollTop: $(document).scrollTop() + delta,
+    }, 1000);
+  })
 })
 
 // Helper Classes
+class ScrollButtons {
+  constructor () {
+    this.scrollButtonsContainer = $("<div id='scroll_buttons'></div>");
+    this.scrollUpButton = $("<button id='scroll_up'>up</button>");
+    this.scrollDownButton = $("<button id='scroll_down'>down</button>");
+
+    $("body").append(this.scrollButtonsContainer);
+    $("#scroll_buttons").append(this.scrollUpButton);
+    $("#scroll_buttons").append(this.scrollDownButton);
+  }
+}
+
 class LineClicker {
   constructor () {
     this.state = 0;

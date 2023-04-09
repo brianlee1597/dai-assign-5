@@ -17,3 +17,26 @@
   background-color: red;
   pointer-events: none;
 }
+
+#scroll_buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+  z-index: 10000;
+}
+
+#scroll_buttons > * {
+  padding: 10px 30px;
+  border: none;
+  background-color: white;
+  color: black;
+  font-size: 1.275em;
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 1em;
+  cursor: pointer;
+}
