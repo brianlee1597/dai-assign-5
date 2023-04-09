@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "OneButton",
+  "minimum_chrome_version": "24.0.1307.0",
+  "version": "0.0.1",
+  "homepage_url": "https://sarahmorrisonsmith.com/",
+  "icons": {},
+  "content_scripts": [
+    {
+      "matches": ["https://sarahmorrisonsmith.com/*"],
+      "js": ["scripts/jquery.min.js", "scripts/onebutton.js"],
+      "css": ["css/onebutton.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
