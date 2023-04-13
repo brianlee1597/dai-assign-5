@@ -2,6 +2,7 @@
 jQuery(function () {
   const lineClicker = new LineClicker();
   const scrollButtons = new ScrollButtons();
+  const keyboard = new SoftwareKeyboard();
 
   // line clicker function
   $(document).on("keydown", function (e) {
@@ -21,7 +22,7 @@ jQuery(function () {
 
     $('html, body').animate({
       scrollTop: $(document).scrollTop() - delta,
-    }, 1000);
+    }, 500);
   })
 
   $(scrollButtons.scrollDownButton).on("click", function (e) {
@@ -29,16 +30,78 @@ jQuery(function () {
 
     $('html, body').animate({
       scrollTop: $(document).scrollTop() + delta,
-    }, 1000);
+    }, 500);
+  })
+
+  // keyboard click functions
+  $("input[type='text'], textarea").on("focus", function(e) {
+    keyboard.input = this;
+  })
+
+  $("input[type='text'], textarea").on("focusout", function(e) {
+    keyboard.input = null;
+  })
+
+  $.get("https://sarahmorrisonsmith.com/accessibility/keyboard.html", function (data) {
+    $("body").append(data);
+    $('.keyboard').hide();
+
+    $('.key').on("mousedown", function (e) {
+      e.preventDefault() //prevents focus
+    })
+
+    $('.key').on("click", function (e) {
+      e.preventDefault();
+
+      const focused = keyboard.input;
+      let innerText = $(this).text().replace(/[\s\n]+/g, "");
+
+      if (innerText === "CapsLock") {
+        keyboard.capsLock = !keyboard.capsLock;
+        return;
+      }
+
+      if (!keyboard.capsLock) {
+        innerText = innerText.toLowerCase();
+      }
+
+      switch (innerText) {
+        case "backspace":
+          $(focused).val($(focused).val().slice(0, $(focused).val().length - 1));
+          break;
+        case "enter":
+          $(focused).val($(focused).val() + "\n");
+          break;
+        default: 
+          $(focused).val($(focused).val() + innerText);
+      }
+    })
+  });
+
+  $(keyboard.keyboardShowHide).on("click", function (e) {
+    e.preventDefault();
+
+    $('.keyboard')[keyboard.showKeyboard ? "hide" : "show"]();
+    keyboard.showKeyboard = !keyboard.showKeyboard;
   })
 })
 
 // Helper Classes
+class SoftwareKeyboard {
+  constructor () {
+    this.input = null;
+    this.showKeyboard = false;
+    this.capsLock = false;
+    this.keyboardShowHide = $("<button id='keyboard'>keyboard</button>");
+    $("#scroll_buttons").append(this.keyboardShowHide);
+  }
+}
+
 class ScrollButtons {
   constructor () {
     this.scrollButtonsContainer = $("<div id='scroll_buttons'></div>");
-    this.scrollUpButton = $("<button id='scroll_up'>up</button>");
-    this.scrollDownButton = $("<button id='scroll_down'>down</button>");
+    this.scrollUpButton = $("<button id='scroll_up'>scroll up</button>");
+    this.scrollDownButton = $("<button id='scroll_down'>scroll down</button>");
 
     $("body").append(this.scrollButtonsContainer);
     $("#scroll_buttons").append(this.scrollUpButton);

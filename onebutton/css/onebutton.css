@@ -40,3 +40,16 @@
   border-radius: 1em;
   cursor: pointer;
 }
+
+#scroll_buttons > #keyboard {
+  background-color: black;
+  color: white;
+}
+
+.keyboard {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 5%;
+  margin: auto;
+}
