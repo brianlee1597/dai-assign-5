@@ -6,9 +6,8 @@ jQuery(function () {
 
   // line clicker function
   $(document).on("keydown", function (e) {
-    e.preventDefault();
-
     if (e.key == " ") {
+      e.preventDefault();
       e.stopPropagation();
       lineClicker.execute();
     }
@@ -56,8 +55,24 @@ jQuery(function () {
       const focused = keyboard.input;
       let innerText = $(this).text().replace(/[\s\n]+/g, "");
 
-      if (innerText === "CapsLock") {
+      // enter, caps lock, shift, double values, tab, backspace
+      if (innerText == "Shift") {
+        keyboard.shift = !keyboard.shift;
+        return;
+      }
+      
+      if (innerText == "CapsLock") {
         keyboard.capsLock = !keyboard.capsLock;
+        return;
+      }
+
+      if (innerText == "Enter") {
+        $(focused).val($(focused).val() + "\n");
+        return;
+      }
+
+      if (innerText == "Backspace") {
+        $(focused).val($(focused).val().slice(0, $(focused).val().length - 1));
         return;
       }
 
@@ -65,22 +80,21 @@ jQuery(function () {
         innerText = innerText.toLowerCase();
       }
 
-      switch (innerText) {
-        case "backspace":
-          $(focused).val($(focused).val().slice(0, $(focused).val().length - 1));
-          break;
-        case "enter":
-          $(focused).val($(focused).val() + "\n");
-          break;
-        default: 
-          $(focused).val($(focused).val() + innerText);
+      if (innerText.length === 2) {
+        const index1 = keyboard.shift ? 1 : 0;
+        const index2 = index1 + 1;
+        innerText = innerText.substring(index1, index2);
       }
+
+      $(focused).val($(focused).val() + innerText);
     })
   });
 
-  $(keyboard.keyboardShowHide).on("click", function (e) {
+  $(keyboard.keyboardShowHide).on("mousedown", function (e) {
     e.preventDefault();
+  })
 
+  $(keyboard.keyboardShowHide).on("click", function (e) {
     $('.keyboard')[keyboard.showKeyboard ? "hide" : "show"]();
     keyboard.showKeyboard = !keyboard.showKeyboard;
   })
@@ -92,6 +106,7 @@ class SoftwareKeyboard {
     this.input = null;
     this.showKeyboard = false;
     this.capsLock = false;
+    this.shift = false;
     this.keyboardShowHide = $("<button id='keyboard'>keyboard</button>");
     $("#scroll_buttons").append(this.keyboardShowHide);
   }
