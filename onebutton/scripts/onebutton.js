@@ -55,7 +55,16 @@ jQuery(function () {
       const focused = keyboard.input;
       let innerText = $(this).text().replace(/[\s\n]+/g, "");
 
-      // enter, caps lock, shift, double values, tab, backspace
+      if (innerText == "") {
+        $(focused).val($(focused).val() + " ");
+        return;
+      }
+
+      if (innerText == "Tab") {
+        $(focused).val($(focused).val() + " ");
+        return;
+      }
+
       if (innerText == "Shift") {
         keyboard.shift = !keyboard.shift;
         return;
